@@ -1,0 +1,47 @@
+<!-- index.ejs
+ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote App</title>
+</head>
+<body>
+    <h1>This is quotes generation app using Node,Express and Mongo db</h1>
+    
+        <form action="/quotes" method="POST">
+            <input type="text" placeholder="name" name="name">
+            <input type="text" placeholder="quote" name="quote">
+            <button type="submit">Submit</button>
+        </form>
+        
+    <div>
+        <h2>Want to update the quotes</h2>
+        <p>
+            replace first devansh's quote with a quote written by dev 
+        </p>
+        <button id="update-button">Replace devansh's quote</button>
+    </div>
+
+        <h2>Quotes</h2>
+        <ul class="quotes">
+            <% for(var i=0;i<quotes.length;i++) {%>
+                <li class="quote">
+                    <span><%= quotes[i].name %></span>:
+                    <span><%= quotes[i].quote %></span>
+                </li>
+            <%}%>
+        </ul>                
+        
+
+        
+        <h2>Remove the dev quotes</h2>
+        <p>Delete one dev's quote ,Does nothing if there are no more dev 
+            here's quote</p>
+
+        <button id="delete-button">Delete dev's quote</button>    
+            <div id="message"></div>
+    <script src="/main.js"></script>
+</body>
+</html>

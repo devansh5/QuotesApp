@@ -11,14 +11,18 @@ MongoClient.connect('mongodb+srv://dev5:focus@1234@cluster0.9vkcp.mongodb.net/te
     const db=client.db('marvels-quotes')
     const quotesCollection=db.collection('quotes')
     app.set('view-engine','ejs')
+    app.use(express.static('public'))
+    app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({extended:true}))
     app.get('/',function(req,res){
         db.collection('quotes').find().toArray()
+        
         .then(result=>{
-            console.log(result)
+            
+            res.render('index.ejs',{quotes:result})
         })
         .catch(error=>console.error(error))
-        res.send("welcome to learning node and express learning world")
+        
     })
     app.get('/quotes',function(req,res){
         res.sendFile(__dirname+"/index.html")
@@ -32,6 +36,37 @@ MongoClient.connect('mongodb+srv://dev5:focus@1234@cluster0.9vkcp.mongodb.net/te
         })
         .catch(error=>console.error(error))
         
+    })
+    app.put('/quotes',(req,res)=>{
+        quotesCollection.findOneAndUpdate(
+            {name:'devansh dev'},
+            {
+                $set:{
+                    name:req.body.name,
+                    quote:req.body.quote
+                }
+            },
+            {
+                upsert:true
+            }
+        )
+        .then(result => {
+            res.send('Success')
+           })
+        .catch(error => console.error(error))
+      
+    })
+    app.delete('/quotes',(req,res)=>{
+        quotesCollection.deleteOne(
+            {name:req.body.name}
+        )
+        .then(result=>{
+            if(result.deleteCount===0){
+                return res.json('No quote to delete')
+            }
+            res.json('deleted the dev here quote')
+        })
+        .catch(error=>console.error(error))
     })
     app.listen(3000,function(req,res){
         console.log("Hello server is running at port no 3000")
